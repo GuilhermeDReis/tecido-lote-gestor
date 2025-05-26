@@ -1,26 +1,18 @@
-
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Package, Search, Plus } from 'lucide-react';
-
 const Index = () => {
   const lotes = JSON.parse(localStorage.getItem('lotes') || '{}');
   const totalLotes = Object.keys(lotes).length;
-
-  return (
-    <div className="min-h-screen bg-blue-50">
+  return <div className="min-h-screen bg-blue-50">
       <Navigation />
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Sistema de Gestão de Estoque
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Gerencie seus lotes de malha de forma simples e eficiente
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Gestão de Lotes Baiana</h1>
+          <p className="text-xl text-gray-600 mb-8">Sistema gerenciador de lotes feito para o baiano</p>
           <div className="w-24 h-1 bg-blue-500 mx-auto rounded-full"></div>
         </div>
 
@@ -80,8 +72,6 @@ const Index = () => {
           </Card>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
