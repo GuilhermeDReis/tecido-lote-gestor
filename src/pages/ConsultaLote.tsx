@@ -62,7 +62,7 @@ const ConsultaLote = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-blue-50">
       <Navigation />
       <div className="max-w-4xl mx-auto p-6">
         <div className="mb-8">
@@ -93,7 +93,7 @@ const ConsultaLote = () => {
               <div className="flex items-end">
                 <Button
                   onClick={handleBuscar}
-                  className="h-12 px-6 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="h-12 px-6 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   <Search className="w-5 h-5 mr-2" />
                   Buscar
@@ -115,7 +115,7 @@ const ConsultaLote = () => {
               {loteEncontrado ? (
                 <div className="space-y-6">
                   {/* Código do Lote - Destaque */}
-                  <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-2xl">
+                  <div className="bg-blue-500 p-6 rounded-2xl">
                     <h2 className="text-white font-medium text-lg mb-2">Código do Lote</h2>
                     <p className="text-white text-2xl font-bold">{loteEncontrado.codigoLote}</p>
                     <p className="text-white/80 text-sm mt-2">

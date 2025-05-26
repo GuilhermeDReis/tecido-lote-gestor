@@ -65,7 +65,7 @@ const CadastroLote = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-blue-50">
       <Navigation />
       <div className="max-w-4xl mx-auto p-6">
         <div className="mb-8">
@@ -79,7 +79,7 @@ const CadastroLote = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Código do Lote - Campo principal */}
-            <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 rounded-2xl">
+            <div className="bg-blue-500 p-6 rounded-2xl">
               <Label htmlFor="codigoLote" className="text-white font-medium mb-2 block">
                 Código do Lote *
               </Label>
@@ -189,7 +189,7 @@ const CadastroLote = () => {
             <div className="pt-6">
               <Button
                 onClick={handleSave}
-                className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                className="w-full h-12 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 Salvar Lote
               </Button>

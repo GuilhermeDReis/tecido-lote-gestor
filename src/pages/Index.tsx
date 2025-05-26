@@ -10,7 +10,7 @@ const Index = () => {
   const totalLotes = Object.keys(lotes).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-blue-50">
       <Navigation />
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
@@ -21,7 +21,7 @@ const Index = () => {
           <p className="text-xl text-gray-600 mb-8">
             Gerencie seus lotes de malha de forma simples e eficiente
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
+          <div className="w-24 h-1 bg-blue-500 mx-auto rounded-full"></div>
         </div>
 
         {/* Stats Card */}
@@ -29,7 +29,7 @@ const Index = () => {
           <CardContent className="p-8">
             <div className="flex items-center justify-center">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Package className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-2">{totalLotes}</h3>
@@ -43,7 +43,7 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           <Card className="shadow-xl border-0 rounded-3xl bg-white/70 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 group">
             <CardHeader className="pb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <Plus className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-xl font-semibold text-gray-800">Cadastrar Novo Lote</CardTitle>
@@ -53,7 +53,7 @@ const Index = () => {
                 Adicione um novo lote de malha ao sistema com todas as informações necessárias como gramatura, fio, cor e muito mais.
               </p>
               <Link to="/cadastro">
-                <Button className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                <Button className="w-full h-12 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                   Cadastrar Lote
                 </Button>
               </Link>
@@ -62,7 +62,7 @@ const Index = () => {
 
           <Card className="shadow-xl border-0 rounded-3xl bg-white/70 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 group">
             <CardHeader className="pb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                 <Search className="w-6 h-6 text-white" />
               </div>
               <CardTitle className="text-xl font-semibold text-gray-800">Consultar Lote</CardTitle>
@@ -72,7 +72,7 @@ const Index = () => {
                 Busque informações detalhadas de qualquer lote cadastrado no sistema usando o código do lote.
               </p>
               <Link to="/consulta">
-                <Button className="w-full h-12 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                <Button className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                   Consultar Lote
                 </Button>
               </Link>
@@ -94,8 +94,8 @@ const Index = () => {
               </p>
             </div>
             <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Search className="w-6 h-6 text-purple-600" />
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Search className="w-6 h-6 text-blue-600" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Busca Rápida</h3>
               <p className="text-gray-600 text-sm">
@@ -103,8 +103,8 @@ const Index = () => {
               </p>
             </div>
             <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <BarChart3 className="w-6 h-6 text-indigo-600" />
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <BarChart3 className="w-6 h-6 text-blue-600" />
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Interface Moderna</h3>
               <p className="text-gray-600 text-sm">
