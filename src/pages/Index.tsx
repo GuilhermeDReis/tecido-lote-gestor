@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Package, Search, Plus, BarChart3 } from 'lucide-react';
+import { Package, Search, Plus } from 'lucide-react';
 
 const Index = () => {
   const lotes = JSON.parse(localStorage.getItem('lotes') || '{}');
@@ -40,7 +40,7 @@ const Index = () => {
         </Card>
 
         {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="shadow-xl border-0 rounded-3xl bg-white/70 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 group">
             <CardHeader className="pb-4">
               <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -78,40 +78,6 @@ const Index = () => {
               </Link>
             </CardContent>
           </Card>
-        </div>
-
-        {/* Features */}
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">Recursos do Sistema</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Package className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Gestão Completa</h3>
-              <p className="text-gray-600 text-sm">
-                Controle todas as informações dos seus lotes em um só lugar
-              </p>
-            </div>
-            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Search className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Busca Rápida</h3>
-              <p className="text-gray-600 text-sm">
-                Encontre qualquer lote instantaneamente pelo código
-              </p>
-            </div>
-            <div className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl">
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <BarChart3 className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Interface Moderna</h3>
-              <p className="text-gray-600 text-sm">
-                Design intuitivo e responsivo para facilitar o uso
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
