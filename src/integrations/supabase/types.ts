@@ -9,7 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      lotes: {
+        Row: {
+          artigo: string | null
+          codigo_lote: string
+          cor: string | null
+          created_at: string
+          fio: string | null
+          gramatura: string | null
+          id: string
+          largura: string | null
+          numero_maquina_tear: string | null
+          tecelagem: string | null
+          updated_at: string
+        }
+        Insert: {
+          artigo?: string | null
+          codigo_lote: string
+          cor?: string | null
+          created_at?: string
+          fio?: string | null
+          gramatura?: string | null
+          id?: string
+          largura?: string | null
+          numero_maquina_tear?: string | null
+          tecelagem?: string | null
+          updated_at?: string
+        }
+        Update: {
+          artigo?: string | null
+          codigo_lote?: string
+          cor?: string | null
+          created_at?: string
+          fio?: string | null
+          gramatura?: string | null
+          id?: string
+          largura?: string | null
+          numero_maquina_tear?: string | null
+          tecelagem?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

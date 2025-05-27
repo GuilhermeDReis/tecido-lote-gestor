@@ -1,23 +1,22 @@
-
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLotes } from '@/hooks/useLotes';
 
 const CadastroLote = () => {
-  const { toast } = useToast();
+  const { salvarLote, loading } = useLotes();
   const [formData, setFormData] = useState({
-    codigoLote: '',
+    codigo_lote: '',
     gramatura: '',
     fio: '',
     largura: '',
     cor: '',
     artigo: '',
     tecelagem: '',
-    numeroMaquinaTear: ''
+    numero_maquina_tear: ''
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -27,41 +26,29 @@ const CadastroLote = () => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Validação simples
-    if (!formData.codigoLote.trim()) {
-      toast({
-        title: "Erro",
-        description: "Código do lote é obrigatório",
-        variant: "destructive"
-      });
+    if (!formData.codigo_lote.trim()) {
       return;
     }
 
-    // Salvar no localStorage
-    const existingLotes = JSON.parse(localStorage.getItem('lotes') || '{}');
-    existingLotes[formData.codigoLote] = {
-      ...formData,
-      dataCadastro: new Date().toISOString()
-    };
-    localStorage.setItem('lotes', JSON.stringify(existingLotes));
-
-    toast({
-      title: "Sucesso!",
-      description: "Lote cadastrado com sucesso",
-    });
-
-    // Limpar formulário
-    setFormData({
-      codigoLote: '',
-      gramatura: '',
-      fio: '',
-      largura: '',
-      cor: '',
-      artigo: '',
-      tecelagem: '',
-      numeroMaquinaTear: ''
-    });
+    try {
+      await salvarLote(formData);
+      
+      // Limpar formulário
+      setFormData({
+        codigo_lote: '',
+        gramatura: '',
+        fio: '',
+        largura: '',
+        cor: '',
+        artigo: '',
+        tecelagem: '',
+        numero_maquina_tear: ''
+      });
+    } catch (error) {
+      // Erro já tratado no hook
+    }
   };
 
   return (
@@ -80,15 +67,16 @@ const CadastroLote = () => {
           <CardContent className="space-y-4 sm:space-y-6">
             {/* Código do Lote - Campo principal */}
             <div className="bg-blue-500 p-4 sm:p-6 rounded-xl sm:rounded-2xl">
-              <Label htmlFor="codigoLote" className="text-white font-medium mb-2 block text-sm sm:text-base">
+              <Label htmlFor="codigo_lote" className="text-white font-medium mb-2 block text-sm sm:text-base">
                 Código do Lote *
               </Label>
               <Input
-                id="codigoLote"
-                value={formData.codigoLote}
-                onChange={(e) => handleInputChange('codigoLote', e.target.value)}
+                id="codigo_lote"
+                value={formData.codigo_lote}
+                onChange={(e) => handleInputChange('codigo_lote', e.target.value)}
                 className="bg-white/90 border-0 rounded-xl h-11 sm:h-12 text-base sm:text-lg font-medium"
                 placeholder="Digite o código do lote"
+                disabled={loading}
               />
             </div>
 
@@ -104,6 +92,7 @@ const CadastroLote = () => {
                   onChange={(e) => handleInputChange('gramatura', e.target.value)}
                   className="rounded-xl border-gray-200 h-10 sm:h-11 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                   placeholder="Ex: 180g/m²"
+                  disabled={loading}
                 />
               </div>
 
@@ -117,6 +106,7 @@ const CadastroLote = () => {
                   onChange={(e) => handleInputChange('fio', e.target.value)}
                   className="rounded-xl border-gray-200 h-10 sm:h-11 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                   placeholder="Ex: Algodão 30/1"
+                  disabled={loading}
                 />
               </div>
 
@@ -130,6 +120,7 @@ const CadastroLote = () => {
                   onChange={(e) => handleInputChange('largura', e.target.value)}
                   className="rounded-xl border-gray-200 h-10 sm:h-11 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                   placeholder="Ex: 1,80m"
+                  disabled={loading}
                 />
               </div>
 
@@ -143,6 +134,7 @@ const CadastroLote = () => {
                   onChange={(e) => handleInputChange('cor', e.target.value)}
                   className="rounded-xl border-gray-200 h-10 sm:h-11 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                   placeholder="Ex: Azul Marinho"
+                  disabled={loading}
                 />
               </div>
 
@@ -156,6 +148,7 @@ const CadastroLote = () => {
                   onChange={(e) => handleInputChange('artigo', e.target.value)}
                   className="rounded-xl border-gray-200 h-10 sm:h-11 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                   placeholder="Ex: Jersey"
+                  disabled={loading}
                 />
               </div>
 
@@ -169,19 +162,21 @@ const CadastroLote = () => {
                   onChange={(e) => handleInputChange('tecelagem', e.target.value)}
                   className="rounded-xl border-gray-200 h-10 sm:h-11 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                   placeholder="Ex: Meia malha"
+                  disabled={loading}
                 />
               </div>
 
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="numeroMaquinaTear" className="text-gray-700 font-medium text-sm sm:text-base">
+                <Label htmlFor="numero_maquina_tear" className="text-gray-700 font-medium text-sm sm:text-base">
                   Número da Máquina Tear
                 </Label>
                 <Input
-                  id="numeroMaquinaTear"
-                  value={formData.numeroMaquinaTear}
-                  onChange={(e) => handleInputChange('numeroMaquinaTear', e.target.value)}
+                  id="numero_maquina_tear"
+                  value={formData.numero_maquina_tear}
+                  onChange={(e) => handleInputChange('numero_maquina_tear', e.target.value)}
                   className="rounded-xl border-gray-200 h-10 sm:h-11 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                   placeholder="Ex: T001"
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -189,9 +184,10 @@ const CadastroLote = () => {
             <div className="pt-4 sm:pt-6">
               <Button
                 onClick={handleSave}
-                className="w-full h-11 sm:h-12 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
+                className="w-full h-11 sm:h-12 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base disabled:opacity-50"
               >
-                Salvar Lote
+                {loading ? 'Salvando...' : 'Salvar Lote'}
               </Button>
             </div>
           </CardContent>

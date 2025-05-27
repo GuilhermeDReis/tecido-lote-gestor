@@ -1,13 +1,13 @@
-
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Package, Search, Plus } from 'lucide-react';
+import { useLotes } from '@/hooks/useLotes';
 
 const Index = () => {
-  const lotes = JSON.parse(localStorage.getItem('lotes') || '{}');
-  const totalLotes = Object.keys(lotes).length;
+  const { lotes } = useLotes();
+  const totalLotes = lotes.length;
 
   return (
     <div className="min-h-screen bg-blue-50">

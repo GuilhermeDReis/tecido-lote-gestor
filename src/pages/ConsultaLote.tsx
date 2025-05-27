@@ -1,58 +1,26 @@
-
 import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search } from 'lucide-react';
-
-interface LoteData {
-  codigoLote: string;
-  gramatura: string;
-  fio: string;
-  largura: string;
-  cor: string;
-  artigo: string;
-  tecelagem: string;
-  numeroMaquinaTear: string;
-  dataCadastro: string;
-}
+import { useLotes, type Lote } from '@/hooks/useLotes';
 
 const ConsultaLote = () => {
-  const { toast } = useToast();
+  const { buscarLotePorCodigo, loading } = useLotes();
   const [codigoBusca, setCodigoBusca] = useState('');
-  const [loteEncontrado, setLoteEncontrado] = useState<LoteData | null>(null);
+  const [loteEncontrado, setLoteEncontrado] = useState<Lote | null>(null);
   const [buscaRealizada, setBuscaRealizada] = useState(false);
 
-  const handleBuscar = () => {
+  const handleBuscar = async () => {
     if (!codigoBusca.trim()) {
-      toast({
-        title: "Erro",
-        description: "Digite o código do lote para buscar",
-        variant: "destructive"
-      });
       return;
     }
 
-    const lotes = JSON.parse(localStorage.getItem('lotes') || '{}');
-    const lote = lotes[codigoBusca];
-
-    if (lote) {
-      setLoteEncontrado(lote);
-      toast({
-        title: "Lote encontrado!",
-        description: `Dados do lote ${codigoBusca} carregados`,
-      });
-    } else {
-      setLoteEncontrado(null);
-      toast({
-        title: "Lote não encontrado",
-        description: `Nenhum lote com código ${codigoBusca} foi encontrado`,
-        variant: "destructive"
-      });
-    }
+    setBuscaRealizada(false);
+    const lote = await buscarLotePorCodigo(codigoBusca);
+    setLoteEncontrado(lote);
     setBuscaRealizada(true);
   };
 
@@ -65,6 +33,7 @@ const ConsultaLote = () => {
     <div className="min-h-screen bg-blue-50">
       <Navigation />
       <div className="max-w-4xl mx-auto p-4 sm:p-6">
+        {/* Área de Busca */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Consultar Lote</h1>
           <p className="text-gray-600 text-sm sm:text-base">Digite o código do lote para visualizar suas informações</p>
@@ -88,15 +57,17 @@ const ConsultaLote = () => {
                   className="rounded-xl border-gray-200 h-11 sm:h-12 text-base sm:text-lg"
                   placeholder="Digite o código do lote"
                   onKeyPress={(e) => e.key === 'Enter' && handleBuscar()}
+                  disabled={loading}
                 />
               </div>
               <div className="flex items-end">
                 <Button
                   onClick={handleBuscar}
-                  className="w-full sm:w-auto h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base"
+                  disabled={loading}
+                  className="w-full sm:w-auto h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base disabled:opacity-50"
                 >
                   <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                  Buscar
+                  {loading ? 'Buscando...' : 'Buscar'}
                 </Button>
               </div>
             </div>
@@ -117,10 +88,12 @@ const ConsultaLote = () => {
                   {/* Código do Lote - Destaque */}
                   <div className="bg-blue-500 p-4 sm:p-6 rounded-xl sm:rounded-2xl">
                     <h2 className="text-white font-medium text-base sm:text-lg mb-2">Código do Lote</h2>
-                    <p className="text-white text-xl sm:text-2xl font-bold">{loteEncontrado.codigoLote}</p>
-                    <p className="text-white/80 text-xs sm:text-sm mt-2">
-                      Cadastrado em: {formatarData(loteEncontrado.dataCadastro)}
-                    </p>
+                    <p className="text-white text-xl sm:text-2xl font-bold">{loteEncontrado.codigo_lote}</p>
+                    {loteEncontrado.created_at && (
+                      <p className="text-white/80 text-xs sm:text-sm mt-2">
+                        Cadastrado em: {formatarData(loteEncontrado.created_at)}
+                      </p>
+                    )}
                   </div>
 
                   {/* Grid com informações */}
@@ -170,7 +143,7 @@ const ConsultaLote = () => {
                     <div className="bg-gray-50 p-3 sm:p-4 rounded-xl sm:col-span-2">
                       <Label className="text-gray-600 text-xs sm:text-sm font-medium">Número da Máquina Tear</Label>
                       <p className="text-gray-900 text-base sm:text-lg font-semibold mt-1">
-                        {loteEncontrado.numeroMaquinaTear || 'Não informado'}
+                        {loteEncontrado.numero_maquina_tear || 'Não informado'}
                       </p>
                     </div>
                   </div>
