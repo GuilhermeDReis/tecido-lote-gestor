@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 export interface Lote {
   id?: string;
@@ -13,6 +14,9 @@ export interface Lote {
   artigo?: string;
   tecelagem?: string;
   numero_maquina_tear?: string;
+  status?: string;
+  user_id?: string;
+  user_name?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -21,6 +25,7 @@ export const useLotes = () => {
   const [lotes, setLotes] = useState<Lote[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user, profile } = useAuth();
 
   const carregarLotes = async () => {
     try {
@@ -47,12 +52,24 @@ export const useLotes = () => {
     }
   };
 
-  const salvarLote = async (lote: Omit<Lote, 'id' | 'created_at' | 'updated_at'>) => {
+  const salvarLote = async (lote: Omit<Lote, 'id' | 'created_at' | 'updated_at' | 'user_id' | 'user_name'>) => {
     try {
       setLoading(true);
+      
+      if (!user || !profile) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      const loteData = {
+        ...lote,
+        user_id: user.id,
+        user_name: profile.name,
+        status: 'ativo'
+      };
+
       const { data, error } = await supabase
         .from('lotes')
-        .insert([lote])
+        .insert([loteData])
         .select()
         .single();
 
@@ -67,11 +84,11 @@ export const useLotes = () => {
       });
 
       return data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao salvar lote:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível salvar o lote",
+        description: error.message || "Não foi possível salvar o lote",
         variant: "destructive"
       });
       throw error;
@@ -108,8 +125,10 @@ export const useLotes = () => {
   };
 
   useEffect(() => {
-    carregarLotes();
-  }, []);
+    if (user) {
+      carregarLotes();
+    }
+  }, [user]);
 
   return {
     lotes,

@@ -20,8 +20,11 @@ export type Database = {
           id: string
           largura: string | null
           numero_maquina_tear: string | null
+          status: string | null
           tecelagem: string | null
           updated_at: string
+          user_id: string | null
+          user_name: string | null
         }
         Insert: {
           artigo?: string | null
@@ -33,8 +36,11 @@ export type Database = {
           id?: string
           largura?: string | null
           numero_maquina_tear?: string | null
+          status?: string | null
           tecelagem?: string | null
           updated_at?: string
+          user_id?: string | null
+          user_name?: string | null
         }
         Update: {
           artigo?: string | null
@@ -46,7 +52,34 @@ export type Database = {
           id?: string
           largura?: string | null
           numero_maquina_tear?: string | null
+          status?: string | null
           tecelagem?: string | null
+          updated_at?: string
+          user_id?: string | null
+          user_name?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
           updated_at?: string
         }
         Relationships: []

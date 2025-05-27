@@ -1,12 +1,15 @@
+
 import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Package, Search, Plus } from 'lucide-react';
+import { Package, Search, Plus, BarChart3 } from 'lucide-react';
 import { useLotes } from '@/hooks/useLotes';
+import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
   const { lotes } = useLotes();
+  const { profile } = useAuth();
   const totalLotes = lotes.length;
 
   return (
@@ -18,9 +21,14 @@ const Index = () => {
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 px-2">
             Gestão de Lotes Baiana
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 px-4">
+          <p className="text-lg sm:text-xl text-gray-600 mb-2 px-4">
             Sistema gerenciador de lotes feito para o baiano
           </p>
+          {profile && (
+            <p className="text-sm text-gray-500 mb-6 sm:mb-8">
+              Bem-vindo, {profile.name}!
+            </p>
+          )}
           <div className="w-16 sm:w-24 h-1 bg-blue-500 mx-auto rounded-full"></div>
         </div>
 
@@ -40,7 +48,7 @@ const Index = () => {
         </Card>
 
         {/* Action Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
           <Card className="shadow-xl border-0 rounded-2xl sm:rounded-3xl bg-white/70 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 group">
             <CardHeader className="pb-3 sm:pb-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -78,6 +86,27 @@ const Index = () => {
               <Link to="/consulta">
                 <Button className="w-full h-11 sm:h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base">
                   Consultar Lote
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-xl border-0 rounded-2xl sm:rounded-3xl bg-white/70 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 group lg:col-span-2 xl:col-span-1">
+            <CardHeader className="pb-3 sm:pb-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-700 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              </div>
+              <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">
+                Acompanhamento
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed">
+                Monitore todos os lotes cadastrados com filtros avançados por código, usuário e data de cadastro.
+              </p>
+              <Link to="/acompanhamento">
+                <Button className="w-full h-11 sm:h-12 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base">
+                  Acompanhar Lotes
                 </Button>
               </Link>
             </CardContent>
