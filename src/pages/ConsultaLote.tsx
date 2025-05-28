@@ -1,4 +1,6 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,19 +11,35 @@ import { useLotes, type Lote } from '@/hooks/useLotes';
 
 const ConsultaLote = () => {
   const { buscarLotePorCodigo, loading } = useLotes();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [codigoBusca, setCodigoBusca] = useState('');
   const [loteEncontrado, setLoteEncontrado] = useState<Lote | null>(null);
   const [buscaRealizada, setBuscaRealizada] = useState(false);
 
-  const handleBuscar = async () => {
-    if (!codigoBusca.trim()) {
+  // Verificar se há código na URL ao carregar a página
+  useEffect(() => {
+    const codigoUrl = searchParams.get('codigo');
+    if (codigoUrl) {
+      setCodigoBusca(codigoUrl);
+      handleBuscar(codigoUrl);
+    }
+  }, [searchParams]);
+
+  const handleBuscar = async (codigo?: string) => {
+    const codigoParaBuscar = codigo || codigoBusca;
+    if (!codigoParaBuscar.trim()) {
       return;
     }
 
     setBuscaRealizada(false);
-    const lote = await buscarLotePorCodigo(codigoBusca);
+    const lote = await buscarLotePorCodigo(codigoParaBuscar);
     setLoteEncontrado(lote);
     setBuscaRealizada(true);
+    
+    // Atualizar URL se necessário
+    if (!codigo) {
+      setSearchParams({ codigo: codigoParaBuscar });
+    }
   };
 
   const formatarData = (dataISO: string) => {
@@ -62,7 +80,7 @@ const ConsultaLote = () => {
               </div>
               <div className="flex items-end">
                 <Button
-                  onClick={handleBuscar}
+                  onClick={() => handleBuscar()}
                   disabled={loading}
                   className="w-full sm:w-auto h-11 sm:h-12 px-4 sm:px-6 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 text-sm sm:text-base disabled:opacity-50"
                 >
@@ -95,6 +113,16 @@ const ConsultaLote = () => {
                       </p>
                     )}
                   </div>
+
+                  {/* Cliente - Se existir */}
+                  {loteEncontrado.cliente_nome && (
+                    <div className="bg-green-50 p-3 sm:p-4 rounded-xl border border-green-200">
+                      <Label className="text-green-800 text-xs sm:text-sm font-medium">Cliente</Label>
+                      <p className="text-green-900 text-base sm:text-lg font-semibold mt-1">
+                        {loteEncontrado.cliente_nome}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Grid com informações */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">

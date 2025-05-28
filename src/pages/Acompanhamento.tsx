@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface LoteCompleto {
@@ -23,12 +24,18 @@ interface LoteCompleto {
   numero_maquina_tear?: string;
   status: string;
   user_name?: string;
+  cliente_nome?: string;
   created_at: string;
 }
+
+type SortField = keyof LoteCompleto;
+type SortDirection = 'asc' | 'desc' | null;
 
 const Acompanhamento = () => {
   const [lotes, setLotes] = useState<LoteCompleto[]>([]);
   const [loading, setLoading] = useState(false);
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [filtros, setFiltros] = useState({
     codigo_lote: '',
     usuario: '',
@@ -36,6 +43,7 @@ const Acompanhamento = () => {
     data_fim: ''
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const carregarLotes = async () => {
     try {
@@ -68,7 +76,29 @@ const Acompanhamento = () => {
         throw error;
       }
 
-      setLotes(data || []);
+      let sortedData = data || [];
+      
+      // Aplicar ordenação se existir
+      if (sortField && sortDirection) {
+        sortedData = [...sortedData].sort((a, b) => {
+          const aValue = a[sortField];
+          const bValue = b[sortField];
+          
+          if (aValue === null || aValue === undefined) return 1;
+          if (bValue === null || bValue === undefined) return -1;
+          
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            const comparison = aValue.localeCompare(bValue);
+            return sortDirection === 'asc' ? comparison : -comparison;
+          }
+          
+          if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+          if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+          return 0;
+        });
+      }
+
+      setLotes(sortedData);
     } catch (error) {
       console.error('Erro ao carregar lotes:', error);
       toast({
@@ -83,7 +113,39 @@ const Acompanhamento = () => {
 
   useEffect(() => {
     carregarLotes();
-  }, []);
+  }, [filtros, sortField, sortDirection]);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Se já está ordenando por este campo, alterna a direção
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortDirection(null);
+        setSortField(null);
+      } else {
+        setSortDirection('asc');
+      }
+    } else {
+      // Novo campo, começa com ascendente
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
+    }
+    
+    if (sortDirection === 'asc') {
+      return <ArrowUp className="w-4 h-4 text-blue-600" />;
+    } else if (sortDirection === 'desc') {
+      return <ArrowDown className="w-4 h-4 text-blue-600" />;
+    }
+    
+    return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
+  };
 
   const handleFiltrar = () => {
     carregarLotes();
@@ -96,9 +158,12 @@ const Acompanhamento = () => {
       data_inicio: '',
       data_fim: ''
     });
-    setTimeout(() => {
-      carregarLotes();
-    }, 100);
+    setSortField(null);
+    setSortDirection(null);
+  };
+
+  const handleRowClick = (codigo: string) => {
+    navigate(`/consulta?codigo=${codigo}`);
   };
 
   const formatarData = (data: string) => {
@@ -205,23 +270,125 @@ const Acompanhamento = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Código</TableHead>
-                    <TableHead>Gramatura</TableHead>
-                    <TableHead>Fio</TableHead>
-                    <TableHead>Largura</TableHead>
-                    <TableHead>Cor</TableHead>
-                    <TableHead>Artigo</TableHead>
-                    <TableHead>Tecelagem</TableHead>
-                    <TableHead>Máquina</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Usuário</TableHead>
-                    <TableHead>Data Cadastro</TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('codigo_lote')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Código
+                        {getSortIcon('codigo_lote')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('cliente_nome')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Cliente
+                        {getSortIcon('cliente_nome')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('gramatura')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Gramatura
+                        {getSortIcon('gramatura')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('fio')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Fio
+                        {getSortIcon('fio')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('largura')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Largura
+                        {getSortIcon('largura')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('cor')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Cor
+                        {getSortIcon('cor')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('artigo')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Artigo
+                        {getSortIcon('artigo')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('tecelagem')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Tecelagem
+                        {getSortIcon('tecelagem')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('numero_maquina_tear')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Máquina
+                        {getSortIcon('numero_maquina_tear')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('status')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Status
+                        {getSortIcon('status')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('user_name')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Usuário
+                        {getSortIcon('user_name')}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer select-none hover:bg-gray-50"
+                      onClick={() => handleSort('created_at')}
+                    >
+                      <div className="flex items-center gap-2">
+                        Data Cadastro
+                        {getSortIcon('created_at')}
+                      </div>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {lotes.map((lote) => (
-                    <TableRow key={lote.id}>
+                    <TableRow 
+                      key={lote.id}
+                      className="cursor-pointer hover:bg-blue-50 transition-colors"
+                      onClick={() => handleRowClick(lote.codigo_lote)}
+                    >
                       <TableCell className="font-medium">{lote.codigo_lote}</TableCell>
+                      <TableCell>{lote.cliente_nome || '-'}</TableCell>
                       <TableCell>{lote.gramatura || '-'}</TableCell>
                       <TableCell>{lote.fio || '-'}</TableCell>
                       <TableCell>{lote.largura || '-'}</TableCell>
@@ -244,7 +411,7 @@ const Acompanhamento = () => {
                   ))}
                   {lotes.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={11} className="text-center py-8 text-gray-500">
+                      <TableCell colSpan={12} className="text-center py-8 text-gray-500">
                         {loading ? 'Carregando...' : 'Nenhum lote encontrado'}
                       </TableCell>
                     </TableRow>

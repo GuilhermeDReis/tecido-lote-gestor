@@ -10,6 +10,8 @@ import Index from "./pages/Index";
 import CadastroLote from "./pages/CadastroLote";
 import ConsultaLote from "./pages/ConsultaLote";
 import Acompanhamento from "./pages/Acompanhamento";
+import ConsultaClientes from "./pages/ConsultaClientes";
+import CadastroClientes from "./pages/CadastroClientes";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -42,6 +44,21 @@ const App = () => (
             <Route path="/acompanhamento" element={
               <ProtectedRoute>
                 <Acompanhamento />
+              </ProtectedRoute>
+            } />
+            <Route path="/clientes" element={
+              <ProtectedRoute>
+                <ConsultaClientes />
+              </ProtectedRoute>
+            } />
+            <Route path="/clientes/cadastro" element={
+              <ProtectedRoute>
+                <CadastroClientes />
+              </ProtectedRoute>
+            } />
+            <Route path="/clientes/editar/:id" element={
+              <ProtectedRoute>
+                <CadastroClientes />
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />

@@ -9,9 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      clientes: {
+        Row: {
+          codigo: string
+          created_at: string
+          id: string
+          nome: string
+          observacao: string | null
+          updated_at: string
+          user_id: string | null
+          user_name: string | null
+        }
+        Insert: {
+          codigo: string
+          created_at?: string
+          id?: string
+          nome: string
+          observacao?: string | null
+          updated_at?: string
+          user_id?: string | null
+          user_name?: string | null
+        }
+        Update: {
+          codigo?: string
+          created_at?: string
+          id?: string
+          nome?: string
+          observacao?: string | null
+          updated_at?: string
+          user_id?: string | null
+          user_name?: string | null
+        }
+        Relationships: []
+      }
       lotes: {
         Row: {
           artigo: string | null
+          cliente_id: string | null
+          cliente_nome: string | null
           codigo_lote: string
           cor: string | null
           created_at: string
@@ -28,6 +63,8 @@ export type Database = {
         }
         Insert: {
           artigo?: string | null
+          cliente_id?: string | null
+          cliente_nome?: string | null
           codigo_lote: string
           cor?: string | null
           created_at?: string
@@ -44,6 +81,8 @@ export type Database = {
         }
         Update: {
           artigo?: string | null
+          cliente_id?: string | null
+          cliente_nome?: string | null
           codigo_lote?: string
           cor?: string | null
           created_at?: string
@@ -58,7 +97,15 @@ export type Database = {
           user_id?: string | null
           user_name?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "lotes_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

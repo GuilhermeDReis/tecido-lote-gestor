@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
@@ -5,10 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLotes } from '@/hooks/useLotes';
+import ClienteCombobox from '@/components/ClienteCombobox';
 
 const CadastroLote = () => {
   const { salvarLote, loading } = useLotes();
   const [formData, setFormData] = useState({
+    cliente_id: '',
+    cliente_nome: '',
     codigo_lote: '',
     gramatura: '',
     fio: '',
@@ -26,6 +30,14 @@ const CadastroLote = () => {
     }));
   };
 
+  const handleClienteChange = (clienteId: string, clienteNome: string) => {
+    setFormData(prev => ({
+      ...prev,
+      cliente_id: clienteId,
+      cliente_nome: clienteNome
+    }));
+  };
+
   const handleSave = async () => {
     // Validação simples
     if (!formData.codigo_lote.trim()) {
@@ -37,6 +49,8 @@ const CadastroLote = () => {
       
       // Limpar formulário
       setFormData({
+        cliente_id: '',
+        cliente_nome: '',
         codigo_lote: '',
         gramatura: '',
         fio: '',
@@ -65,6 +79,19 @@ const CadastroLote = () => {
             <CardTitle className="text-lg sm:text-xl font-semibold text-gray-800">Informações do Lote</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 sm:space-y-6">
+            {/* Cliente */}
+            <div className="space-y-2">
+              <Label htmlFor="cliente" className="text-gray-700 font-medium text-sm sm:text-base">
+                Cliente
+              </Label>
+              <ClienteCombobox
+                value={formData.cliente_id}
+                onValueChange={handleClienteChange}
+                placeholder="Selecione um cliente..."
+                disabled={loading}
+              />
+            </div>
+
             {/* Código do Lote - Campo principal */}
             <div className="bg-blue-500 p-4 sm:p-6 rounded-xl sm:rounded-2xl">
               <Label htmlFor="codigo_lote" className="text-white font-medium mb-2 block text-sm sm:text-base">
