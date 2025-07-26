@@ -17,6 +17,7 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string, name: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -124,6 +125,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       toast({
         title: "Erro",
         description: error.message || "Erro ao fazer login",
+        variant: "destructive"
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Redirecionando...",
+        description: "Você será redirecionado para o Google para fazer login.",
+      });
+    } catch (error: any) {
+      console.error('Erro no login com Google:', error);
+      toast({
+        title: "Erro",
+        description: error.message || "Erro ao fazer login com Google",
         variant: "destructive"
       });
       throw error;
